@@ -9,3 +9,15 @@ export const createShortUrl = async (req: Request, res: Response) => {
 
   return res.send(newUrl)
 }
+
+export const handleRedirect = async (req: Request, res: Response) => {
+  const {shortId} = req.params;
+
+  const dest = await shortUrl.findOne({shortId}).lean();
+
+  if(!dest) {
+    return res.status(404).json({success: false})
+  }
+
+  return res.redirect(dest?.destination)
+}
